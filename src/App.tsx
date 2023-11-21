@@ -2,7 +2,7 @@ import Router from "./router";
 
 function App() {
   return (
-    <div className="relative m-auto min-h-screen max-w-lg">
+    <div className="relative m-auto flex min-h-screen max-w-lg flex-col scrollbar-hide">
       <Router />
     </div>
   );

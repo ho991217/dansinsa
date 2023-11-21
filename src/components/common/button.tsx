@@ -1,7 +1,7 @@
 import clsx from "clsx";
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentProps } from "react";
 
-interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
+export interface ButtonProps extends ComponentProps<"button"> {
   color?: "primary" | "secondary";
 }
 
@@ -15,7 +15,7 @@ export default function Button({
   return (
     <button
       className={clsx(
-        "flex items-center justify-center rounded-lg text-white",
+        "flex items-center justify-center rounded-lg py-3 text-white",
         color === "primary" ? "bg-blue-500" : "bg-gray-500",
         disabled && "bg-gray-300",
         className,

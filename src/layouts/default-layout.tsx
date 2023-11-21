@@ -39,7 +39,10 @@ export default function DefaultLayout({
     <>
       <TopBar title={title} hasBackButton={isHiddenPath()} />
       <div
-        className={clsx("m-6 flex flex-col items-center gap-6", className)}
+        className={clsx(
+          "m-6 flex flex-grow flex-col items-center gap-6 scrollbar-hide",
+          className,
+        )}
         {...props}
       >
         {children}
