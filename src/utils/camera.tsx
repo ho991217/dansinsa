@@ -35,6 +35,9 @@ const WebcamCapture = ({ onCapture }: WebcamCaptureProps) => {
         ref={webcamRef}
         videoConstraints={videoConstraints}
         screenshotFormat="image/jpeg"
+        onLoad={() => {
+          console.log("loaded");
+        }}
       />
       <button
         onClick={capture}

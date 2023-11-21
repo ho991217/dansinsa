@@ -1,18 +1,20 @@
-import Webcam from "react-webcam";
 import WebcamCapture from "../../utils/camera";
-import { useState } from "react";
+import { useUserImgSrc } from ".";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../constants";
 
 export default function ImageRegister() {
-  const [imgSrc, setImgSrc] = useState("");
+  const { setUserImgSrc } = useUserImgSrc();
+  const navigate = useNavigate();
 
   const onCapture = (imageSrc: string) => {
-    setImgSrc(imageSrc);
+    try {
+      setUserImgSrc(imageSrc);
+      navigate(PATH.vton.image.result);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  return (
-    <>
-      {imgSrc && <img src={imgSrc} />}
-      <WebcamCapture onCapture={onCapture} />
-    </>
-  );
+  return <WebcamCapture onCapture={onCapture} />;
 }
