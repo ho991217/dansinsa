@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useScrollDirection } from "../../hooks/useScrollDirection";
 import { motion, useAnimate, useAnimationControls } from "framer-motion";
 import useAuth from "../../hooks/useAuth";
+import { PATH } from "../../constants";
 
 interface NavigationItem {
   id: number;
@@ -16,7 +17,7 @@ export const NavigationItems: NavigationItem[] = [
   {
     id: 1,
     name: "홈",
-    path: "/",
+    path: PATH.main,
     icon: (
       <svg
         width="24"
@@ -45,7 +46,7 @@ export const NavigationItems: NavigationItem[] = [
   {
     id: 2,
     name: "가상피팅",
-    path: "/vton",
+    path: PATH.vton.intro,
     icon: (
       <svg
         width="24"
@@ -67,7 +68,7 @@ export const NavigationItems: NavigationItem[] = [
   {
     id: 3,
     name: "로그인",
-    path: "/login",
+    path: PATH.login,
     icon: (
       <svg
         width="24"
@@ -96,7 +97,7 @@ export const NavigationItems: NavigationItem[] = [
   {
     id: 4,
     name: "마이페이지",
-    path: "/mypage",
+    path: PATH.mypage,
     icon: (
       <svg
         width="24"
