@@ -1,8 +1,9 @@
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Outlet, useOutletContext } from "react-router-dom";
 import DefaultLayout from "../../layouts/default-layout";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UserSizeType } from "../../types/user.types";
 import supabase from "../../supabase";
+import { TABLE_NAME } from "../../constants";
 
 export interface VtonOutletContext {
   userImgSrc: string;
@@ -30,7 +31,7 @@ export default function Vton() {
     {
       event: "*",
       schema: "public",
-      table: "user_size",
+      table: TABLE_NAME.user_size,
     },
     (payload) => {
       console.log(payload.new);

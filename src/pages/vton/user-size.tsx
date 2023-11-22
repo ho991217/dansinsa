@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import supabase from "../../supabase";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { PATH } from "../../constants";
+import { PATH, TABLE_NAME } from "../../constants";
 
 export default function UserSize() {
   const { userSize, setUserSize } = useUserSize();
@@ -34,7 +34,7 @@ export default function UserSize() {
     if (!user_id) throw new Error("User ID is not defined");
 
     try {
-      await supabase.from("user_size").upsert({
+      await supabase.from(TABLE_NAME.user_size).upsert({
         user_id,
         width,
         l_sleeve,
