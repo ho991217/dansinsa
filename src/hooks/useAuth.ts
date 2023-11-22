@@ -9,20 +9,23 @@ const useAuth = () => {
 
   const getUserId = async () => {
     try {
-      const auth = await supabase.auth.getSession();
-      if (!auth) throw new AuthError("No session");
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-      return auth.data.session?.user.id;
+      return user?.id;
     } catch (error: unknown) {
-      if (error instanceof AuthError) return false;
-      throw error;
+      alert(error);
     }
   };
 
   const isLoggedIn = async () => {
     if (loggedIn) return true;
+
     try {
-      await getUserId();
+      const id = await getUserId();
+      if (!id) return false;
+
       return true;
     } catch (error: unknown) {
       if (error instanceof AuthError) return false;
@@ -39,15 +42,21 @@ const useAuth = () => {
   }) => {
     try {
       if (loggedIn) return;
-      await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      setLoggedIn(true);
-      navigate("/");
+      if (error) {
+        alert(error);
+        return;
+      }
+      if (data.session?.access_token) {
+        setLoggedIn(true);
+        navigate("/");
+      }
     } catch (error: unknown) {
-      if (error instanceof AuthError) alert(error.message);
+      if (error instanceof AuthError) console.log(error.message);
     }
   };
 
@@ -56,7 +65,7 @@ const useAuth = () => {
       await supabase.auth.signOut();
       navigate("/");
     } catch (error: unknown) {
-      if (error instanceof AuthError) alert(error.message);
+      if (error instanceof AuthError) console.log(error.message);
     }
   };
 

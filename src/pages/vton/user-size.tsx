@@ -54,6 +54,7 @@ export default function UserSize() {
           <Input
             icon={<UserSize.Height />}
             value={userSize.height}
+            unit="cm"
             className="bg-white"
             readOnly
             disabled
@@ -66,20 +67,8 @@ export default function UserSize() {
               type="number"
               icon={<UserSize.Width />}
               value={width}
+              unit="cm"
               onChange={(e) => setWidth(Number(e.target.value))}
-            />
-          ) : (
-            <UserSize.Loader />
-          )}
-        </div>
-        <div className="flex flex-col gap-2">
-          긴팔 소매 길이
-          {userSize.l_sleeve ? (
-            <Input
-              type="number"
-              icon={<UserSize.LSleeve />}
-              value={l_sleeve}
-              onChange={(e) => setLSleeve(Number(e.target.value))}
             />
           ) : (
             <UserSize.Loader />
@@ -90,9 +79,24 @@ export default function UserSize() {
           {userSize.s_sleeve ? (
             <Input
               type="number"
+              unit="cm"
               icon={<UserSize.SSleeve />}
               value={s_sleeve}
               onChange={(e) => setSSleeve(Number(e.target.value))}
+            />
+          ) : (
+            <UserSize.Loader />
+          )}
+        </div>
+        <div className="flex flex-col gap-2">
+          긴팔 소매 길이
+          {userSize.l_sleeve ? (
+            <Input
+              type="number"
+              unit="cm"
+              icon={<UserSize.LSleeve />}
+              value={l_sleeve}
+              onChange={(e) => setLSleeve(Number(e.target.value))}
             />
           ) : (
             <UserSize.Loader />

@@ -14,10 +14,14 @@ export default function CheckCapture() {
   const { getUserId } = useAuth();
   const navigate = useNavigate();
 
-  const onClick = async () => {
+  const getId = async () => {
     const userId = await getUserId();
-    if (!userId) throw new Error("User ID is not defined");
 
+    if (!userId) throw new Error("유저 아이디가 없습니다.");
+    return userId;
+  };
+
+  const uploadImage = async (userId: string) => {
     const bucket = await supabase.storage
       .from("user_img")
       .upload(
@@ -31,47 +35,56 @@ export default function CheckCapture() {
     if (bucket.error) {
       throw bucket.error;
     }
-    const img_path = bucket.data.path;
 
-    const original_col = await supabase
+    return bucket;
+  };
+
+  const uploadImagePathToDB = async (userId: string, img_path: string) => {
+    const { data: _data, error: _error } = await supabase
       .from("user_img")
-      .select("user_id, original", { count: "exact", head: true })
-      .eq("user_id", userId);
+      .upsert({ user_id: userId, original: img_path })
+      .select();
 
-    if (original_col.error) {
-      throw original_col.error;
+    if (_error) {
+      throw _error;
     }
+  };
 
-    if (original_col.count && original_col.count < 1) {
-      const { data: _data, error: _error } = await supabase
-        .from("user_img")
-        .insert({ user_id: userId, original: img_path })
-        .select();
+  const onClick = async () => {
+    try {
+      const userId = await getId();
+      const bucket = await uploadImage(userId);
+      const img_path = bucket.data.path;
+      await uploadImagePathToDB(userId, img_path);
 
-      if (_error) {
-        throw _error;
-      }
+      navigate(PATH.vton.height);
+    } catch (error) {
+      if (error instanceof Error) alert(error.message);
     }
-
-    navigate(PATH.vton.height);
   };
 
   return (
     <div className="flex w-full flex-grow flex-col justify-end">
       <motion.img
         src={userImgSrc}
-        className="absolute left-1/2 w-full"
+        className="absolute left-1/2 top-0 w-full"
         initial={{
-          scale: 1,
-          borderRadius: 0,
+          scale: 0.95,
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+          borderBottomLeftRadius: "0.75rem",
+          borderBottomRightRadius: "0.75rem",
           translateX: "-50%",
           translateY: 0,
         }}
         animate={{
           scale: 0.87,
-          borderRadius: "1rem",
+          borderTopLeftRadius: "0.75rem",
+          borderTopRightRadius: "0.75rem",
+          borderBottomLeftRadius: "0.75rem",
+          borderBottomRightRadius: "0.75rem",
           translateX: "-50%",
-          translateY: "-12.5%",
+          translateY: "10%",
           transition: { duration: 0.3, ease: "easeInOut" },
         }}
       />

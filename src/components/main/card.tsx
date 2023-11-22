@@ -12,7 +12,7 @@ export default function Card(props: Tables<"product">) {
     <MotionLink
       to={"/product/" + props.id}
       className={clsx(
-        "relative flex-col items-center justify-center overflow-hidden rounded-2xl bg-white even:translate-y-10",
+        "relative flex-col items-center justify-center overflow-hidden rounded-2xl bg-white shadow-xl even:translate-y-10",
       )}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

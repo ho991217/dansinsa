@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Webcam from "react-webcam";
 import HumanSilhouette from "../../assets/vton/human_silhouette.svg";
 import CAM_DEMENSION from "../../constants/dimension";
 import { MoonLoader } from "react-spinners";
 import clsx from "clsx";
 import { motion } from "framer-motion";
+import { Camera } from "react-camera-pro";
 
 type FacingMode = "user" | "environment";
 
@@ -14,12 +15,13 @@ interface WebcamCaptureProps {
 
 const WebcamCapture = ({ onCapture }: WebcamCaptureProps) => {
   const [silhouetteOn, setSilhouetteOn] = useState(false);
-  const [facingMode, setFacingMode] = useState<FacingMode>("user");
   const [isCamLoaded, setIsCamLoaded] = useState(false);
+  const [facingMode, setFacingMode] = useState<FacingMode>("user");
   const webcamRef = React.useRef<any>(null);
 
   const capture = React.useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
+
     onCapture(imageSrc);
   }, [webcamRef]);
 
@@ -27,7 +29,7 @@ const WebcamCapture = ({ onCapture }: WebcamCaptureProps) => {
     <div className="absolute top-0 h-screen min-w-full">
       <div
         className={clsx(
-          "relative overflow-hidden rounded-b-xl shadow-xl",
+          "relative aspect-[3/4] w-full overflow-hidden rounded-b-xl shadow-xl",
           !isCamLoaded && "hidden",
         )}
       >
@@ -50,12 +52,11 @@ const WebcamCapture = ({ onCapture }: WebcamCaptureProps) => {
         <Webcam
           audio={false}
           ref={webcamRef}
+          screenshotFormat="image/jpeg"
           videoConstraints={{
-            ...CAM_DEMENSION,
             facingMode,
           }}
-          screenshotFormat="image/jpeg"
-          mirrored
+          mirrored={facingMode === "user"}
           onLoadStart={() => setIsCamLoaded(false)}
           onLoadedData={() => setIsCamLoaded(true)}
         />
@@ -67,6 +68,13 @@ const WebcamCapture = ({ onCapture }: WebcamCaptureProps) => {
         </span>
       )}
       <div className="mt-8 flex w-full items-center justify-between px-10">
+        <button
+          onClick={() =>
+            setFacingMode((prev) => (prev === "user" ? "environment" : "user"))
+          }
+        >
+          전환
+        </button>
         <button
           onClick={capture}
           className="flex h-[4rem] w-[4rem] items-center justify-center rounded-full bg-blue-500 text-2xl text-white shadow-xl ring-2 ring-blue-500 ring-offset-2 focus:outline-none"

@@ -7,14 +7,14 @@ import LoginPerson from "../assets/login/login_person.png";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, logout, isLoggedIn } = useAuth();
+  const { login, isLoggedIn } = useAuth();
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await login({ email, password });
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 

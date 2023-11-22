@@ -11,4 +11,4 @@ export default CAM_DEMENSION;
 export const CROP_SIZE = {
   width: WIDTH,
   height: 1440,
-}
+};
