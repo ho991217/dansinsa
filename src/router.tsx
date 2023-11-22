@@ -8,6 +8,7 @@ import Introduction from "./pages/vton/introduction";
 
 import { PATH } from "./constants";
 import CheckCapture from "./pages/vton/check-capture";
+import UserSize from "./pages/vton/user-size";
 
 export default function Router() {
   return (
@@ -19,7 +20,8 @@ export default function Router() {
         <Route path={PATH.vton.root} element={<Vton />}>
           <Route path={PATH.vton.intro} element={<Introduction />} />
           <Route path={PATH.vton.image.capture} element={<ImageRegister />} />
-          <Route path={PATH.vton.image.result} element={<CheckCapture />} />
+          <Route path={PATH.vton.image.check} element={<CheckCapture />} />
+          <Route path={PATH.vton.image.size} element={<UserSize />} />
         </Route>
         <Route path="*" element={<div>Not Found</div>} />
       </Routes>

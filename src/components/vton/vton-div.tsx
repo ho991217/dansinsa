@@ -14,7 +14,7 @@ export default function VtonDiv({
 }: Props) {
   return (
     <motion.div
-      className={clsx("text-left text-3xl font-medium", className)}
+      className={clsx("text-left text-3xl font-semibold", className)}
       initial={{ opacity: 0, translateY: 10, filter: "blur(10px)" }}
       animate={{
         opacity: 1,

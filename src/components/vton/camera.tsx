@@ -1,8 +1,8 @@
 import React from "react";
 import Webcam from "react-webcam";
-import HumanSilhouette from "../assets/vton/human_silhouette.svg";
-import Camera from "../assets/vton/camera_white.png";
-import CAM_DEMENSION from "../constants/dimension";
+import HumanSilhouette from "../../assets/vton/human_silhouette.svg";
+import Camera from "../../assets/vton/camera_white.png";
+import CAM_DEMENSION from "../../constants/dimension";
 
 interface WebcamCaptureProps {
   onCapture: (imageSrc: string) => void;
@@ -10,6 +10,8 @@ interface WebcamCaptureProps {
 
 const videoConstraints = {
   ...CAM_DEMENSION,
+  // width: 1080,
+  // height: 1440,
   facingMode: "user",
 };
 
@@ -26,7 +28,7 @@ const WebcamCapture = ({ onCapture }: WebcamCaptureProps) => {
       <img
         src={HumanSilhouette}
         alt="silhouette"
-        className="absolute left-1/2 top-1/2 h-[90%] -translate-x-1/2 -translate-y-1/2 opacity-40"
+        className="absolute left-1/2 top-1/2 h-[90%] -translate-x-1/2 -translate-y-1/2 opacity-25"
       />
       <Webcam
         audio={false}
@@ -35,9 +37,6 @@ const WebcamCapture = ({ onCapture }: WebcamCaptureProps) => {
         ref={webcamRef}
         videoConstraints={videoConstraints}
         screenshotFormat="image/jpeg"
-        onLoad={() => {
-          console.log("loaded");
-        }}
       />
       <button
         onClick={capture}

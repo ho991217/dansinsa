@@ -15,8 +15,10 @@ export default function Button({
   return (
     <button
       className={clsx(
-        "flex items-center justify-center rounded-lg py-3 text-white",
-        color === "primary" ? "bg-blue-500" : "bg-gray-500",
+        "flex items-center justify-center rounded-lg py-3",
+        color === "primary"
+          ? "bg-blue-500 text-white"
+          : "bg-white text-blue-500",
         disabled && "bg-gray-300",
         className,
       )}

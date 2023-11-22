@@ -8,7 +8,7 @@ import { PATH } from "../../constants";
 export default function Introduction() {
   return (
     <main className="flex w-full flex-grow flex-col justify-between">
-      <div className="flex w-full flex-col gap-3">
+      <div className="flex w-full flex-col gap-1">
         <VtonDiv delay={0.5}>
           <img
             src={Camera}

@@ -7,10 +7,19 @@ const useAuth = () => {
   const { loggedIn, setLoggedIn } = useLoginState();
   const navigate = useNavigate();
 
+  const getUserInfo = async () => {
+    try {
+      return supabase.auth.getSession();
+    } catch (error: unknown) {
+      if (error instanceof AuthError) return false;
+      throw error;
+    }
+  };
+
   const isLoggedIn = async () => {
     if (loggedIn) return true;
     try {
-      await supabase.auth.getSession();
+      await getUserInfo();
       return true;
     } catch (error: unknown) {
       if (error instanceof AuthError) return false;
@@ -48,7 +57,7 @@ const useAuth = () => {
     }
   };
 
-  return { isLoggedIn, login, logout };
+  return { getUserInfo, isLoggedIn, login, logout };
 };
 
 export default useAuth;

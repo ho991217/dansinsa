@@ -7,6 +7,8 @@ const PATH = {
     intro: "/vton/intro",
     image: {
       capture: "/vton/image/capture",
+      check: "/vton/image/check",
+      size: "/vton/image/size",
       result: "/vton/image/result",
     },
   },
