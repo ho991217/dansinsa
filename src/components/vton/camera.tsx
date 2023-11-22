@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Webcam from "react-webcam";
 import HumanSilhouette from "../../assets/vton/human_silhouette.svg";
 import CAM_DEMENSION from "../../constants/dimension";
 import { MoonLoader } from "react-spinners";
 import clsx from "clsx";
-import Toggle from "../common/toggle";
 import { motion } from "framer-motion";
 
 type FacingMode = "user" | "environment";
@@ -36,12 +35,14 @@ const WebcamCapture = ({ onCapture }: WebcamCaptureProps) => {
           <motion.img
             src={HumanSilhouette}
             alt="silhouette"
-            className="absolute left-1/2 top-0 z-50 h-full -translate-x-1/2 opacity-40"
+            className="absolute left-1/2 top-0 z-50 h-full -translate-x-1/2"
             initial={{
               filter: "blur(10px)",
+              opacity: 0,
             }}
             animate={{
-              filter: "blur(2.5px)",
+              filter: "blur(1px)",
+              opacity: 0.4,
               transition: { duration: 0.3, ease: "easeInOut" },
             }}
           />
