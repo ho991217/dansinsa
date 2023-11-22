@@ -150,7 +150,7 @@ export default function Navigation() {
   return (
     <motion.div
       className={clsx(
-        "fixed bottom-[-1px] z-50 box-border flex h-[75px] w-full max-w-lg items-start justify-evenly bg-gray-800 pt-3",
+        "fixed bottom-[-1px] z-50 box-border flex h-[80px] w-full max-w-lg items-start justify-evenly bg-gray-800 pt-3",
       )}
       initial={{ y: 100 }}
       animate={controls}

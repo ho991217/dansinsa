@@ -12,10 +12,12 @@ const useAuth = () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      const id = user?.id;
 
-      return user?.id;
+      if (!id) throw new AuthError("로그인 되어있지 않습니다.");
+      return id;
     } catch (error: unknown) {
-      alert(error);
+      return "";
     }
   };
 
