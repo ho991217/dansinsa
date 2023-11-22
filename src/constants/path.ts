@@ -5,12 +5,13 @@ const PATH = {
   vton: {
     root: "/vton",
     intro: "/vton/intro",
+    height: "/vton/height",
     image: {
       capture: "/vton/image/capture",
       check: "/vton/image/check",
-      size: "/vton/image/size",
       result: "/vton/image/result",
     },
+    size: "/vton/size",
   },
 };
 

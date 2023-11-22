@@ -11,15 +11,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function CheckCapture() {
   const { userImgSrc } = useUserImgSrc();
-  const { getUserInfo } = useAuth();
+  const { getUserId } = useAuth();
   const navigate = useNavigate();
 
   const onClick = async () => {
-    const user = await getUserInfo();
-    if (!user) return;
-
-    const userId = user.data.session?.user.id;
-    if (!userId) return;
+    const userId = await getUserId();
+    if (!userId) throw new Error("User ID is not defined");
 
     const bucket = await supabase.storage
       .from("user_img")
@@ -56,7 +53,7 @@ export default function CheckCapture() {
       }
     }
 
-    navigate(PATH.vton.image.size);
+    navigate(PATH.vton.height);
   };
 
   return (
@@ -81,7 +78,7 @@ export default function CheckCapture() {
       <div className="w-full pb-2">
         <VtonDiv delay={0.7} className="w-full">
           <Button onClick={onClick} className="font-base w-full text-sm">
-            치수 측정
+            다음
           </Button>
         </VtonDiv>
         <VtonDiv delay={1.2} className="w-full">
