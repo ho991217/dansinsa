@@ -9,7 +9,7 @@ interface Props {
 
 export default function TopBar({ title, hasBackButton = false }: Props) {
   return (
-    <div className="flex h-[60px] w-full items-center justify-between px-4">
+    <div className="flex h-[60px] w-full items-center justify-between border-b-[1px] border-gray-100 px-4">
       {hasBackButton && <TopBar.BackButton />}
       {!hasBackButton && <TopBar.Title className="">{title}</TopBar.Title>}
       {/* <TopBar.ShoppingCart /> */}

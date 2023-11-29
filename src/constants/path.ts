@@ -12,6 +12,10 @@ const PATH = {
       result: "/vton/image/result",
     },
     size: "/vton/size",
+    result: "/vton/result",
+  },
+  clothes: {
+    detail: "/clothes/:id",
   },
 };
 

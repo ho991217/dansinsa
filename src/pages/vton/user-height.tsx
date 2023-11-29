@@ -18,9 +18,9 @@ export default function UserHeight() {
     if (!height) return;
 
     try {
-      await supabase.from("user_size").upsert({
+      await supabase.from("b_user_height").upsert({
         user_id: userId,
-        height: parseInt(height),
+        b_height: parseInt(height),
       });
     } catch (error) {
       if (error instanceof Error) {

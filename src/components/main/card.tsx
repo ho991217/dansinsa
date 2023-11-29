@@ -4,13 +4,14 @@ import { Link } from "react-router-dom";
 import { ImageSkeleton, TextSkeleton } from "../ui/skeleton";
 import clsx from "clsx";
 import { motion } from "framer-motion";
+import { PATH } from "../../constants";
 
 const MotionLink = motion(Link);
 
 export default function Card(props: Tables<"product">) {
   return (
     <MotionLink
-      to={"/product/" + props.id}
+      to={PATH.clothes.detail.replace(":id", props.id.toString())}
       className={clsx(
         "relative flex-col items-center justify-center overflow-hidden rounded-2xl bg-white shadow-xl even:translate-y-10",
       )}
