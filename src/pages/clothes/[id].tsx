@@ -8,6 +8,10 @@ import useAuth from "../../hooks/useAuth";
 import clsx from "clsx";
 import { ProductType } from "../../types/product.types";
 import getClothesInfo from "../../api/clothes/getClothesById";
+import { useVtonOnState } from "../../store/vton-store";
+import getVtonImagesByProductId from "../../api/vton/getVtonImagesByProductId";
+import { VtonButton } from "../../components/main";
+import { DotLoader } from "react-spinners";
 
 enum Size {
   S,
@@ -58,6 +62,8 @@ const sizes: Array<SizeType & { size: Size }> = [
 
 export default function ClothesDetail() {
   const [product, setProduct] = useState<ProductType | null>(null);
+  const [vtonImgSrc, setVtonImgSrc] = useState<string>("");
+  const { vtonOn } = useVtonOnState();
   const [recommendSize, setRecommendSize] = useState<Size>(Size.S); // [S, M, L, XL]
   const { getUserId } = useAuth();
   const [userSize, setUserSize] = useState<Tables<"user_size"> | null>(null);
@@ -91,6 +97,14 @@ export default function ClothesDetail() {
     });
   };
 
+  const getVtonImages = async () => {
+    const userId = await getUserId();
+    const data = await getVtonImagesByProductId(userId, Number(id));
+    if (!data?.result_img) return;
+
+    setVtonImgSrc(data.result_img);
+  };
+
   useEffect(() => {
     getClothesInfo(Number(id)).then(setProduct);
     getUserSize().then((s) => {
@@ -100,20 +114,34 @@ export default function ClothesDetail() {
     });
   }, []);
 
+  useEffect(() => {
+    if (vtonOn) {
+      getVtonImages();
+    }
+  }, [vtonOn]);
+
   return (
     <DefaultLayout hasBackButton className="items-start gap-0 pb-[80px]">
-      <div className="flex w-full items-center justify-between rounded-lg bg-blue-500 p-4 text-sm font-medium text-white">
-        가상 피팅하기
-        <div className="h-4 w-4 rounded-sm bg-gray-100 font-normal text-gray-600">
-          {/* 첫 구매 이벤트 */}
-        </div>
+      <VtonButton />
+      <div className="my-4 h-[400px] w-full overflow-hidden rounded-xl">
+        {vtonOn && !vtonImgSrc ? (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-gray-300">
+            <DotLoader size={50} color="#3C82F6" />
+            <span className="mt-2 text-xs text-gray-400">
+              가상 피팅 이미지를 불러오는 중입니다.
+            </span>
+          </div>
+        ) : (
+          <img
+            src={vtonOn ? vtonImgSrc : product?.product_img.image_url ?? ""}
+            alt="product image"
+            className="w-full object-cover"
+          />
+        )}
       </div>
-      <img
-        src={product?.product_img.image_url ?? ""}
-        alt="product image"
-        className="py-4"
-      />
-
+      <span className="w-full text-xs text-gray-400">
+        {product?.brand.name ?? ""}
+      </span>
       <h2 className="w-full text-xl font-semibold">{product?.name ?? ""}</h2>
       <p className="w-full text-xs">{product?.description ?? ""}</p>
       <p className="mt-2 w-full border-b-[1px] border-black py-2 text-xl font-medium">

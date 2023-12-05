@@ -5,10 +5,17 @@ import clsx from "clsx";
 import { motion } from "framer-motion";
 import { PATH } from "../../constants";
 import { ProductType } from "../../types/product.types";
+import { VtonType } from "../../types/user.types";
+import { DotLoader } from "react-spinners";
+
+interface CardProps extends ProductType {
+  vtonImage?: VtonType;
+  isVtonOn: boolean;
+}
 
 const MotionLink = motion(Link);
 
-export default function Card(props: ProductType) {
+export default function Card({ vtonImage, isVtonOn, ...props }: CardProps) {
   return (
     <MotionLink
       to={PATH.clothes.detail.replace(":id", props.id.toString())}
@@ -23,11 +30,21 @@ export default function Card(props: ProductType) {
         <Card.Like />
         {/* <Card.Share /> */}
       </div>
-      <img
-        src={props?.product_img?.image_url ?? ""}
-        alt={props.name ?? ""}
-        className="mb-2 aspect-square w-full object-contain object-top"
-      />
+      {isVtonOn && !vtonImage ? (
+        <div className="flex h-[150px] w-full items-center justify-center">
+          <DotLoader size={30} color="#3C82F6" />
+        </div>
+      ) : (
+        <img
+          src={
+            isVtonOn
+              ? vtonImage?.result_img ?? ""
+              : props?.product_img?.image_url ?? ""
+          }
+          alt={props.name ?? ""}
+          className="mb-2 aspect-square h-[150px] w-full rounded-lg object-contain object-top"
+        />
+      )}
       <div className="flex w-full flex-col items-start justify-center gap-1 px-4 pb-3 ">
         <div className="text-xs sm:text-sm">{props.name}</div>
         <div className="mb-2 overflow-hidden text-ellipsis text-[10px] text-gray-500 sm:text-xs">

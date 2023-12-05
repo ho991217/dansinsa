@@ -9,13 +9,35 @@ import {
 import DefaultLayout from "../layouts/default-layout";
 import getAllClothes from "../api/clothes/getAllClothes";
 import { ProductType } from "../types/product.types";
+import { useVtonOnState } from "../store/vton-store";
+import getAllVtonImages from "../api/vton/getAllVtonImages";
+import useAuth from "../hooks/useAuth";
+import { Tables } from "../types/database.types";
+import { VtonType } from "../types/user.types";
 
 export default function Home() {
   const [products, setProducts] = useState<ProductType[]>([]);
+  const [vtonImages, setVtonImages] = useState<VtonType[]>([]);
+  const { getUserId } = useAuth();
+  const { vtonOn } = useVtonOnState();
+
+  const getVtonImages = async () => {
+    const userId = await getUserId();
+    const data = await getAllVtonImages(userId);
+    if (!data) return;
+
+    setVtonImages(data);
+  };
 
   useEffect(() => {
     getAllClothes().then(setProducts);
   }, []);
+
+  useEffect(() => {
+    if (vtonOn) {
+      getVtonImages();
+    }
+  }, [vtonOn]);
 
   return (
     <>
@@ -27,7 +49,14 @@ export default function Home() {
           <Filter />
           <Card.Container>
             {products.map((product) => (
-              <Card key={product.id} {...product} />
+              <Card
+                key={product.id}
+                {...product}
+                vtonImage={vtonImages.find(
+                  (vton) => vton.product_id === product.id,
+                )}
+                isVtonOn={vtonOn}
+              />
             ))}
           </Card.Container>
         </section>

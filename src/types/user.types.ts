@@ -1,3 +1,5 @@
+import { Tables } from "./supabase.types";
+
 export type UserSizeType = {
   height: number;
   width: number;
@@ -21,3 +23,5 @@ interface Pose {
 interface Person {
   pose_keypoints_2d: number[];
 }
+
+export type VtonType = Omit<Tables<"user_result">, "user_id">;
