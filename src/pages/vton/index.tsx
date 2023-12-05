@@ -42,7 +42,6 @@ export default function Vton() {
         table: TABLE_NAME.user_size,
       },
       (payload) => {
-        console.log(payload.new);
         setUserSize(payload.new as UserSizeType);
       },
     )
@@ -54,9 +53,9 @@ export default function Vton() {
         table: TABLE_NAME.b_user_height,
       },
       (payload) => {
-        console.log(payload.new);
         const newPayload = payload.new as UserSizeType;
         if (newPayload.height === null) return;
+
         setUserSize((prev) => ({
           ...prev,
           height: newPayload.height,
@@ -72,7 +71,6 @@ export default function Vton() {
       table: TABLE_NAME.user_preprocess,
     },
     (payload) => {
-      console.log(payload.new);
       setUserPreprocess(payload.new as UserPreprocessType);
     },
   );

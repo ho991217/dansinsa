@@ -6,71 +6,62 @@ import DefaultLayout from "../../layouts/default-layout";
 import { Button } from "../../components/common";
 import useAuth from "../../hooks/useAuth";
 import clsx from "clsx";
-
-interface Product extends Tables<"product"> {
-  brand: {
-    name: string;
-  } | null;
-}
+import { ProductType } from "../../types/product.types";
+import getClothesInfo from "../../api/clothes/getClothesById";
 
 enum Size {
   S,
   M,
   L,
   XL,
+  XXL,
 }
 
 type SizeType = {
   shoulder: number;
-  sleeve: number;
+  l_sleeve: number;
+  s_sleeve: number;
 };
 
-const sizes: Array<Partial<SizeType> & { size?: Size }> = [
+const sizes: Array<SizeType & { size: Size }> = [
   {
     size: Size.S,
-    shoulder: 57,
-    sleeve: 61,
+    shoulder: 51,
+    l_sleeve: 56,
+    s_sleeve: 20,
   },
   {
     size: Size.M,
-    shoulder: 58.5,
-    sleeve: 62.5,
+    shoulder: 53,
+    l_sleeve: 58,
+    s_sleeve: 21,
   },
   {
     size: Size.L,
-    shoulder: 60,
-    sleeve: 64,
+    shoulder: 55,
+    l_sleeve: 59,
+    s_sleeve: 22,
   },
   {
     size: Size.XL,
-    shoulder: 61.5,
-    sleeve: 66.5,
+    shoulder: 57,
+    l_sleeve: 60,
+    s_sleeve: 23,
+  },
+  {
+    size: Size.XXL,
+    shoulder: 59,
+    l_sleeve: 60,
+    s_sleeve: 24,
   },
 ];
 
 export default function ClothesDetail() {
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<ProductType | null>(null);
   const [recommendSize, setRecommendSize] = useState<Size>(Size.S); // [S, M, L, XL]
   const { getUserId } = useAuth();
+  const [userSize, setUserSize] = useState<Tables<"user_size"> | null>(null);
   const { id } = useParams<{ id: string }>();
-
-  const getClothesInfo = async () => {
-    const { data: product, error } = await supabase
-      .from("product")
-      .select(
-        `*,
-        brand (
-          name
-        )`,
-      )
-      .eq("id", id ?? 0);
-
-    if (error) {
-      console.error(error);
-      return;
-    }
-    setProduct(product?.[0] ?? null);
-  };
 
   const getUserSize = async () => {
     const userId = await getUserId();
@@ -83,35 +74,30 @@ export default function ClothesDetail() {
       console.error(error);
       return;
     }
-    return userSize?.[0] ?? null;
+    return userSize[0];
   };
 
-  const getRecommendSize = (userSize?: Tables<"user_size">) => {
+  const getRecommendSize = (userSize: Tables<"user_size">) => {
     if (!userSize) return;
-    const { l_sleeve: user_sleeve, width: user_width } = userSize;
-    if (!user_sleeve || !user_width) return;
 
-    if (user_sleeve < 60) {
-      setRecommendSize(Size.S);
-      return;
-    }
-    if (user_sleeve < 62) {
-      setRecommendSize(Size.M);
-      return;
-    }
-    if (user_sleeve < 64) {
-      setRecommendSize(Size.L);
-      return;
-    }
-    if (user_sleeve < 66) {
-      setRecommendSize(Size.XL);
-      return;
-    }
+    const { l_sleeve, s_sleeve, width } = userSize;
+    if (!l_sleeve || !s_sleeve || !width) return;
+
+    sizes.forEach((size, index) => {
+      if (size.shoulder <= width) {
+        setRecommendSize(index as Size);
+        return;
+      }
+    });
   };
 
   useEffect(() => {
-    getClothesInfo();
-    getUserSize().then(getRecommendSize);
+    getClothesInfo(Number(id)).then(setProduct);
+    getUserSize().then((s) => {
+      if (!s) return;
+      setUserSize(s);
+      getRecommendSize(s);
+    });
   }, []);
 
   return (
@@ -123,13 +109,11 @@ export default function ClothesDetail() {
         </div>
       </div>
       <img
-        src={product?.image_url ?? ""}
+        src={product?.product_img.image_url ?? ""}
         alt="product image"
         className="py-4"
       />
-      <span className="my-2 w-full text-sm text-gray-400">
-        {product?.brand?.name}
-      </span>
+
       <h2 className="w-full text-xl font-semibold">{product?.name ?? ""}</h2>
       <p className="w-full text-xs">{product?.description ?? ""}</p>
       <p className="mt-2 w-full border-b-[1px] border-black py-2 text-xl font-medium">
@@ -158,37 +142,37 @@ export default function ClothesDetail() {
             <path
               d="M18 8C19.6569 8 21 6.65685 21 5C21 3.34315 19.6569 2 18 2C16.3431 2 15 3.34315 15 5C15 6.65685 16.3431 8 18 8Z"
               stroke="rgb(156, 163, 175)"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M6 15C7.65685 15 9 13.6569 9 12C9 10.3431 7.65685 9 6 9C4.34315 9 3 10.3431 3 12C3 13.6569 4.34315 15 6 15Z"
               stroke="rgb(156, 163, 175)"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M18 22C19.6569 22 21 20.6569 21 19C21 17.3431 19.6569 16 18 16C16.3431 16 15 17.3431 15 19C15 20.6569 16.3431 22 18 22Z"
               stroke="rgb(156, 163, 175)"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M8.59 13.51L15.42 17.49"
               stroke="rgb(156, 163, 175)"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M15.41 6.51L8.59 10.49"
               stroke="rgb(156, 163, 175)"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
           공유하기
@@ -213,25 +197,31 @@ export default function ClothesDetail() {
         </button>
       </div>
       <div className="w-full">
-        <div className="my-4 flex w-full items-center justify-center gap-1 rounded-lg border-[1px] bg-white py-10 font-medium">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M21 16V7.99999C20.9996 7.64927 20.9071 7.3048 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.26999L13 2.26999C12.696 2.09446 12.3511 2.00204 12 2.00204C11.6489 2.00204 11.304 2.09446 11 2.26999L4 6.26999C3.69626 6.44536 3.44398 6.69751 3.26846 7.00116C3.09294 7.3048 3.00036 7.64927 3 7.99999V16C3.00036 16.3507 3.09294 16.6952 3.26846 16.9988C3.44398 17.3025 3.69626 17.5546 4 17.73L11 21.73C11.304 21.9055 11.6489 21.9979 12 21.9979C12.3511 21.9979 12.696 21.9055 13 21.73L20 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 16Z"
-              stroke="black"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          AI가 추천하는 고객님의 사이즈는 <span>{Size[recommendSize]}</span>
-          입니다.
-        </div>
+        {userSize ? (
+          <div className="my-4 flex w-full items-center justify-center gap-1 rounded-lg border-[1px] bg-white py-10 font-medium">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M21 16V7.99999C20.9996 7.64927 20.9071 7.3048 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.26999L13 2.26999C12.696 2.09446 12.3511 2.00204 12 2.00204C11.6489 2.00204 11.304 2.09446 11 2.26999L4 6.26999C3.69626 6.44536 3.44398 6.69751 3.26846 7.00116C3.09294 7.3048 3.00036 7.64927 3 7.99999V16C3.00036 16.3507 3.09294 16.6952 3.26846 16.9988C3.44398 17.3025 3.69626 17.5546 4 17.73L11 21.73C11.304 21.9055 11.6489 21.9979 12 21.9979C12.3511 21.9979 12.696 21.9055 13 21.73L20 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 16Z"
+                stroke="black"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            AI가 추천하는 고객님의 사이즈는 <span>{Size[recommendSize]}</span>
+            입니다.
+          </div>
+        ) : (
+          <span className="my-4 w-full text-sm text-gray-400">
+            사이즈를 입력해주세요.
+          </span>
+        )}
         <table className="w-full text-sm">
           <thead>
             <tr className="h-[30px]">
@@ -277,7 +267,7 @@ export default function ClothesDetail() {
                     index === recommendSize && "border-gray-300",
                   )}
                 >
-                  {size.sleeve}
+                  {size.l_sleeve}
                 </td>
               </tr>
             ))}

@@ -1,14 +1,14 @@
 import { ComponentPropsWithoutRef, useEffect, useState } from "react";
-import { Tables } from "../../types/supabase.types";
 import { Link } from "react-router-dom";
 import { ImageSkeleton, TextSkeleton } from "../ui/skeleton";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { PATH } from "../../constants";
+import { ProductType } from "../../types/product.types";
 
 const MotionLink = motion(Link);
 
-export default function Card(props: Tables<"product">) {
+export default function Card(props: ProductType) {
   return (
     <MotionLink
       to={PATH.clothes.detail.replace(":id", props.id.toString())}
@@ -24,7 +24,7 @@ export default function Card(props: Tables<"product">) {
         {/* <Card.Share /> */}
       </div>
       <img
-        src={props.image_url ?? ""}
+        src={props?.product_img?.image_url ?? ""}
         alt={props.name ?? ""}
         className="mb-2 aspect-square w-full object-contain object-top"
       />

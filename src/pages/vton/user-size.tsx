@@ -132,10 +132,10 @@ UserSize.Height = function UserSizeHeight() {
       width="24"
       height="24"
       stroke="rgb(156,163,175)"
-      stroke-width="2"
+      strokeWidth="2"
       fill="none"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
       <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
     </svg>

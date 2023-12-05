@@ -7,22 +7,14 @@ import {
   VtonButton,
 } from "../components/main";
 import DefaultLayout from "../layouts/default-layout";
-import supabase from "../supabase";
-import { Tables } from "../types/supabase.types";
+import getAllClothes from "../api/clothes/getAllClothes";
+import { ProductType } from "../types/product.types";
 
 export default function Home() {
-  const [products, setProducts] = useState<Tables<"product">[]>([]);
-  const getClothes = async () => {
-    try {
-      const { data, error } = await supabase.from("product").select("*");
-      setProducts(data ?? []);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [products, setProducts] = useState<ProductType[]>([]);
 
   useEffect(() => {
-    getClothes();
+    getAllClothes().then(setProducts);
   }, []);
 
   return (
