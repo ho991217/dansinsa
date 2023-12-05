@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Outlet, useOutletContext } from "react-router-dom";
 import DefaultLayout from "../../layouts/default-layout";
-import { UserSizeType } from "../../types/user.types";
+import { UserPreprocessType, UserSizeType } from "../../types/user.types";
 import supabase from "../../supabase";
 import { TABLE_NAME } from "../../constants";
 
@@ -15,6 +15,10 @@ interface UserSizeContext {
   setUserSize: Dispatch<SetStateAction<UserSizeType>>;
 }
 
+interface UserPreprocessContext {
+  userPreprocess: UserPreprocessType | null;
+}
+
 type VtonOutletContextType = string;
 
 export default function Vton() {
@@ -25,30 +29,74 @@ export default function Vton() {
     l_sleeve: 0,
     s_sleeve: 0,
   });
+  const [userPreprocess, setUserPreprocess] =
+    useState<UserPreprocessType | null>(null);
 
-  const userSizeChannel = supabase.channel("user_size").on(
+  const userSizeChannel = supabase
+    .channel("user_size")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: TABLE_NAME.user_size,
+      },
+      (payload) => {
+        console.log(payload.new);
+        setUserSize(payload.new as UserSizeType);
+      },
+    )
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: TABLE_NAME.b_user_height,
+      },
+      (payload) => {
+        console.log(payload.new);
+        const newPayload = payload.new as UserSizeType;
+        if (newPayload.height === null) return;
+        setUserSize((prev) => ({
+          ...prev,
+          height: newPayload.height,
+        }));
+      },
+    );
+
+  const preprocessChannel = supabase.channel("preprocess").on(
     "postgres_changes",
     {
       event: "*",
       schema: "public",
-      table: TABLE_NAME.user_size,
+      table: TABLE_NAME.user_preprocess,
     },
     (payload) => {
       console.log(payload.new);
-      setUserSize(payload.new as UserSizeType);
+      setUserPreprocess(payload.new as UserPreprocessType);
     },
   );
 
   useEffect(() => {
     userSizeChannel.subscribe();
+    preprocessChannel.subscribe();
     return () => {
       userSizeChannel.unsubscribe();
+      preprocessChannel.unsubscribe();
     };
   }, []);
 
   return (
     <DefaultLayout>
-      <Outlet context={{ userImgSrc, setUserImgSrc, userSize, setUserSize }} />
+      <Outlet
+        context={{
+          userImgSrc,
+          setUserImgSrc,
+          userSize,
+          setUserSize,
+          userPreprocess,
+        }}
+      />
     </DefaultLayout>
   );
 }
@@ -59,4 +107,8 @@ export function useUserImgSrc() {
 
 export function useUserSize() {
   return useOutletContext<UserSizeContext>();
+}
+
+export function useUserPreprocess() {
+  return useOutletContext<UserPreprocessContext>();
 }

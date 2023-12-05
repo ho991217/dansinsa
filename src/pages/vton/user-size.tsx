@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { PATH, TABLE_NAME } from "../../constants";
 
 export default function UserSize() {
-  const { userSize, setUserSize } = useUserSize();
+  const { userSize } = useUserSize();
   const [width, setWidth] = useState(0);
   const [l_sleeve, setLSleeve] = useState(0);
   const [s_sleeve, setSSleeve] = useState(0);
@@ -40,7 +40,7 @@ export default function UserSize() {
         l_sleeve,
         s_sleeve,
       });
-      navigate(PATH.vton.image.result);
+      navigate(PATH.vton.preprocess);
     } catch (error) {
       console.error(error);
     }

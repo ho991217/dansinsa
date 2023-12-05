@@ -10,7 +10,7 @@ import Introduction from "./pages/vton/introduction";
 import CheckCapture from "./pages/vton/check-capture";
 import UserSize from "./pages/vton/user-size";
 import UserHeight from "./pages/vton/user-height";
-import Result from "./pages/vton/result";
+import Preprocess from "./pages/vton/preprocess";
 import ClothesDetail from "./pages/clothes/[id]";
 
 export default function Router() {
@@ -26,7 +26,7 @@ export default function Router() {
           <Route path={PATH.vton.image.check} element={<CheckCapture />} />
           <Route path={PATH.vton.height} element={<UserHeight />} />
           <Route path={PATH.vton.size} element={<UserSize />} />
-          <Route path={PATH.vton.result} element={<Result />} />
+          <Route path={PATH.vton.preprocess} element={<Preprocess />} />
         </Route>
         <Route path={PATH.clothes.detail} element={<ClothesDetail />} />
         <Route path="*" element={<div>Not Found</div>} />

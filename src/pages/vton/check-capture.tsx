@@ -54,7 +54,9 @@ export default function CheckCapture() {
     try {
       const userId = await getId();
       const bucket = await uploadImage(userId);
-      const img_path = bucket.data.path;
+      const img_path =
+        "https://gjlvbikvkbtasqrcpsbf.supabase.co/storage/v1/object/public/user_img/" +
+        bucket.data.path;
       await uploadImagePathToDB(userId, img_path);
 
       navigate(PATH.vton.height);

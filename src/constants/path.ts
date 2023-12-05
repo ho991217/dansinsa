@@ -9,10 +9,10 @@ const PATH = {
     image: {
       capture: "/vton/image/capture",
       check: "/vton/image/check",
-      result: "/vton/image/result",
     },
     size: "/vton/size",
     result: "/vton/result",
+    preprocess: "/vton/preprocess",
   },
   clothes: {
     detail: "/clothes/:id",
